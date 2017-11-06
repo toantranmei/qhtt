@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nhom 7</title>
+    <style>
+        table td{
+            width: 105px;
+            height: 30px;
+        }
+        .max {
+        color: blue
+        }
+        .gachchan{ text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Nhập vào các thứ cần tính</h1>
+    <form action="">
+        <label for="">Số rằng buộc</label><input type="number" name="rangbuoc" id="rangbuoc">
+        <label for="">Số biến</label><input type="number" name="sobien" id="sobien">
+        <input type="button" value="Tính" id="btnTinh">
+        <div class="bangone_beforeAppend"><table border="1"></table></div>
+        <div class="actionCal"></div>
+        <div class="noidungloigiai">
+            <div class="tieudedangchuan"></div>
+            <div class="bieuthucstepone"></div>
+            <div class="tieuderangbuoc"></div>
+            <div class="bangrangbuoc"></div>
+            <div class="giaithich"></div>
+            <div class="thucthibang"><table border="1"></table></div>
+        </div>
+    </form>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script>
+        $(function() {
+            $('#btnTinh').click(function() {
+                bangone = [];
+                sorangbuoc = parseInt($('#rangbuoc').val());
+                sobien     = parseInt($('#sobien').val());
+                console.log(sorangbuoc);
+                console.log(sobien);
+                socotstepone  = sobien + 3;
+                sodongstepone = sorangbuoc + 3;
+                console.log(socotstepone);
+                console.log(sodongstepone);
+                for(cot = 1; cot <= socotstepone; cot++) {
+                    for ( hang = 1; hang <= sodongstepone; hang++) {
+                        if ( cot == 1 && hang == 1 ) { 
+                            $('.bangone_beforeAppend table').append('<tr class="dong'+hang+'"><td>#</td><tr>');
+                        } else  if( hang == 1 && cot > 1 && cot <= socotstepone-2 ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td id="chisox'+parseInt(cot-1)+'">X'+parseInt(cot-1)+'</td>');
+                        } else  if( hang == 1 && cot > socotstepone - 2 ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td>#</td>');
+                        } else if ( cot == 1 && hang == 2 ) { 
+                            $('.bangone_beforeAppend table').append('<tr class="dong'+hang+'"><td>F(x)</td><tr>'); 
+                        } else if ( hang ==2 && cot > 1 && cot <= socotstepone-2 ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td><input type="number" name="" id="hsfx'+parseInt(cot-1)+'" placeholder="0"></td>');
+                        } else if ( hang ==2 && cot > 1 && cot == socotstepone-1 ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td>----></td>');
+                        } else if ( hang ==2 && cot == socotstepone ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td><select name="" id="gtcuctri"><option value="MIN" selected>MIN</option><option value="MAX">MAX</option></select></td>');
+                        }
+                        
+                        else if ( cot == 1 && hang == 3 ) { 
+                            $('.bangone_beforeAppend table').append('<tr class="dong'+hang+'"><td>Điều kiện x</td><tr>'); 
+                        } else if ( hang ==3 && cot > 1 && cot <= socotstepone-2 ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td><input type="text" name="" id="dkx'+parseInt(cot-1)+'" placeholder=">=0"></td>');
+                        }
+                        else if ( cot == 1 && hang > 3) {
+                            $('.bangone_beforeAppend table').append('<tr class="dong'+hang+'"><td>Số rằng buộc '+parseInt(hang-3)+'</td><tr>');
+                        } else if ( hang > 3 && cot > 1 && cot <= socotstepone-2) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td><input type="text" name="" id="hsrb'+parseInt(hang-3)+'x'+parseInt(cot-1)+'" placeholder="0"></td>');
+                        } else if ( hang > 3 && cot == socotstepone - 1 ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td><select name="" id="gtrangbuoc'+parseInt(hang-3)+'"><option value="gtbang" selected>=</option><option value="gtnhobang">&lt;=</option><option value="giatrilonbang">&gt;=</option></select></td>');
+                        } else if ( hang > 3 && cot == socotstepone ) {
+                            $('.bangone_beforeAppend table tr.dong'+hang+'').append('<td><input type="text" name="" id="kqrb'+parseInt(hang-3)+'" placeholder="0"></td>');
+                        }
+                    }
+                }
+
+                // Display button Caculator
+                $('.actionCal').append('<a href="javascript:void(0)" id="btnTinhBaiToan">Tính toán</a>');
+
+                // Conditions Caculator MAX or MIN
+                $('#btnTinhBaiToan').click(function() {
+                    if ($('#gtcuctri').val() == 'MIN') {
+                        console.log("Chọn denta lon nhat!");
+                        $('.noidungloigiai .tieudedangchuan').append('<h3 class="gachchan">Bài toán ở dạng chuẩn:</h3>');
+                        //<p>F(x) = 5x<sub>1</sub> - 5x<sub>2</sub> + 0x<sub>3</sub> <span style="color: red;">=> MIN</span></p>
+                        // Bien sobienxdangchuan
+                        sobienxdangchuan = 0;
+                        // Bien = So rang buoc 
+                        for(cot = 1; cot <= socotstepone; cot++) {
+                            for ( hang = 1; hang <= sodongstepone; hang++) {
+                                if ( hang >3 && cot == socotstepone - 1 ) {
+                                    if($('#gtrangbuoc'+parseInt(hang-3)+'').val() != 'gtbang') {
+                                        sobienxdangchuan++;
+                                    }
+                                }
+                            }
+                        }
+                        console.log('So bien gia lap them vao: ' + sobienxdangchuan);
+                        
+                        for( i = 1; i <= sobienxdangchuan + sobien; i++ ){
+                           if(i<=sobien){
+                                $('.noidungloigiai .bieuthucstepone').append('<span>'+$('#hsfx'+i+'').val()+$('#chisox'+i+'').text()+'</span>');
+                           } else {
+                            $('.noidungloigiai .bieuthucstepone').append('<span>0x<sub>'+i+'</sub></span>');
+                           }
+                           $('.noidungloigiai .bieuthucstepone').append('<span class="addletter">+</span>');
+                        }
+                        $('.noidungloigiai .bieuthucstepone').append('<span style="color: red;"> => '+$('#gtcuctri').val()+'</span>');
+                        $('.noidungloigiai .bieuthucstepone span.addletter:last').empty();
+                        $('.noidungloigiai .tieuderangbuoc').append('<h3 class="gachchan">Các rằng buộc:</h3>');
+
+                        // Cong tru them bien
+                        for ( hang = 1; hang <= sodongstepone; hang++) {
+                            for(cot = 1; cot <= socotstepone; cot++) {
+                                if( hang > 3 && cot>1 && cot <= socotstepone - 2){
+                                    $('.noidungloigiai .bangrangbuoc').append('<span>'+$('#hsrb'+parseInt(hang-3)+'x'+parseInt(cot-1)+'').val()+'x<sub>'+parseInt(cot-1)+'</sub></span>');
+                                    $('.noidungloigiai .bangrangbuoc').append('<span class="addletter">+</span>');
+                                    $('.noidungloigiai .bangrangbuoc span.addletter:last').empty();
+                                }
+                            }
+                            if($('#gtrangbuoc'+parseInt(hang-3)+'').val() == 'gtnhobang' ) {
+                                $('.noidungloigiai .bangrangbuoc').append('<span>+m<sub>'+parseInt(hang+1)+'</sub></span>');
+                                $('.noidungloigiai .bangrangbuoc').append('<span>='+$('#kqrb'+parseInt(hang-3)+'').val()+'</span>');
+                            } else if($('#gtrangbuoc'+parseInt(hang-3)+'').val() == 'giatrilonbang'){
+                                $('.noidungloigiai .bangrangbuoc').append('<span>-m<sub>'+parseInt(hang+1)+'</sub></span>');
+                                $('.noidungloigiai .bangrangbuoc').append('<span>='+$('#kqrb'+parseInt(hang-3)+'').val()+'</span>');
+                            } else if($('#gtrangbuoc'+parseInt(hang-3)+'').val() == 'gtbang'){
+                                $('.noidungloigiai .bangrangbuoc').append('<span>='+$('#kqrb'+parseInt(hang-3)+'').val()+'</span>');
+                            }
+                            $('.noidungloigiai .bangrangbuoc').append('<br />');
+                        }
+                        
+
+                        // Step two:
+                        socotsteptwo  = sobien + sobienxdangchuan + 4;
+                        sodongsteptwo = sorangbuoc + 3;
+                        for(cot = 1; cot <= socotsteptwo; cot++) {
+                            for ( hang = 1; hang <= sodongsteptwo; hang++) {
+                                if(cot == 1 && hang ==1){ $('.noidungloigiai .thucthibang table').append('<tr class="hang'+hang+'"><td>C<sub>i</sub></td></tr>'); }
+                                else if(hang == 1 && cot == 2 ) { $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td>x<sub>i</sub></td>'); }
+                                else if(hang == 1 && cot == 3 ) { $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td>k<sub>i</sub></td>'); }
+                                else if(hang == 1 && cot >3 && cot < socotsteptwo ) { $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td class="x'+parseInt(cot-3)+'">x'+parseInt(cot-3)+'</td>'); }
+                                else if(hang == 1 && cot == socotsteptwo ) { $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td>lamda</td>'); }
+                                else if(cot == 1 && hang > 1 && hang <= sodongsteptwo - 2 ) {
+                                    $('.noidungloigiai .thucthibang table').append('<tr class="hang'+hang+'"><td class="hesox'+parseInt(hang-1)+'lan1">0</td></tr>');
+                                } else if(cot == 1 && hang > sodongsteptwo - 2 ) {
+                                    $('.noidungloigiai .thucthibang table').append('<tr class="hang'+hang+'"><td><span style="color: red;">x</span></td></tr>');
+                                } else if(hang > 1 && hang < sodongsteptwo -1 && cot == 3 ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td class="gtk'+parseInt(hang-1)+'">'+$('#kqrb'+parseInt(hang-1)+'').val()+'<span style="margin-left: 10px; color: red;">'+parseInt(0*$('#kqrb'+parseInt(hang-1)+'').val())+'</span></td>');
+                                }
+                                
+                                else if( hang > 1 && hang < sodongsteptwo - 1 && cot > 3 && cot < socotsteptwo - sobienxdangchuan ){
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td class="gtl1rb1x1">'+$('#hsrb'+parseInt(hang-1)+'x'+parseInt(cot-3)+'').val()+'<span style="margin-left: 10px; color: red;">'+parseInt(0*$('#hsrb'+parseInt(hang-1)+'x'+parseInt(cot-3)+'').val())+'</span></td>');
+                                } else if ( hang == sodongsteptwo -1 && cot == 2 ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td>F(x)</td>');
+                                } else if ( hang == sodongsteptwo && cot == 2 ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td>denta</td>');
+                                } else if ( hang == sodongsteptwo - 1 && cot == 3 ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td><span style="color: red;">0</span></td>');
+                                } else if ( hang > 1 && hang < sodongsteptwo - 1 && cot == 2 ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td>x'+parseInt(sobien+1+hang-2)+'</td>');
+                                }
+                                
+                                else if(hang == sodongsteptwo - 1 && cot > 3 && cot < socotsteptwo - sobienxdangchuan) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td id="hsbdx'+parseInt(cot-3)+'">'+$('#hsfx'+parseInt(cot-3)+'').val()+'</td>');
+                                } else if(hang == sodongsteptwo - 1 && cot > 3 + sobien && cot < socotsteptwo) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td class="">0</td>');
+                                } else if(hang == sodongsteptwo && cot == 3 ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td class="">0</td>');
+                                } else if(hang == sodongsteptwo && cot > 3 && cot < socotsteptwo -sobienxdangchuan ) {
+                                    $('.noidungloigiai .thucthibang table tr.hang'+hang+'').append('<td class="">'+parseInt(0-parseInt($('#hsbdx'+parseInt(cot-3)+'').text()))+'</td>');
+                                }
+                                
+                                //find max value >0
+                                var cols = [];
+                                var trs = $('.noidungloigiai .thucthibang table tr:last')
+                                var data =$.each(trs , function(index, tr){
+                                    $.each($(tr).find("td").not(":first"), function(index, td){
+                                    cols[index] = cols[index] || [];
+                                    cols[index].push($(td).text())
+                                    })
+                                });
+                                cols.forEach(function(col, index){
+                                    var max = Math.max.apply(null, col);
+                                    $('.noidungloigiai .thucthibang table tr:last').find('td:eq('+(index+1)+')').each(function(i, td){
+                                    $('td').addClass('max', +$(td).text() === max)
+                                    })
+                                })
+
+                                // var offset = 1;
+
+                                // $('#aktivita tr').each(function () {
+                                //     var values = [];
+
+                                //     $(this).children('td').each(function (i,v) {
+                                //         if (i < offset) return;
+                                //         var value = parseInt($(this).text());
+                                //         if(!isNaN(value))
+                                //             values.push(value);
+                                //     });
+
+                                //     var maxValue = Math.max.apply(null, values);
+                                //     var minValue = Math.min.apply(null, values);
+
+                                //     $(this).children('td').each(function () {
+                                //         if ($(this).text() == maxValue.toString()) {
+                                //             $(this).addClass('max');
+                                //         }
+
+                                //         if ($(this).text() == minValue.toString()) {
+                                //             $(this).addClass('min');
+                                //         }
+                                //     });
+
+                                // });
+                            }
+                        }
+
+
+
+                        $('.noidungloigiai .giaithich').append('<h3 class=" gachchan">Trong đó:</h3>');
+
+
+
+                    } else if ($('#gtcuctri').val() == 'MAX') {
+                        console.log("Chọn denta co gia tri am co gia tri lon nhat");
+                    }
+                });
+                
+            });
+        });
+    </script>
+</body>
+</html>
